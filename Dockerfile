@@ -33,7 +33,7 @@ RUN \
     libpq-dev \
     libsm6 \
     libxrender1 \
-    nvidia-cuda-toolkit \
+    nvidia-cuda-toolkit-12-3 \
     postgresql \
     python3.10 \
     python3.10-dev \
