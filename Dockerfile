@@ -39,9 +39,12 @@ RUN \
     python3.10-dev \
     python3.10-distutils && \
   curl -o \
-    /tmp/libcudnn.deb -L \
-    https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/libcudnn8_8.2.4.15-1+cuda11.4_amd64.deb && \
-  dpkg -i /tmp/libcudnn.deb && \
+    /tmp/cudnn.tar.xz -L \
+    https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/linux-x86_64/cudnn-linux-x86_64-9.0.0.312_cuda12-archive.tar.xz && \
+  mkdir -p /usr/local/cudnn && \
+  tar -xf /tmp/cudnn.tar.xz -C /usr/local/cudnn && \
+  cp -P /usr/local/cudnn/lib/libcudnn* /usr/local/cuda/lib64/ && \
+  chmod a+r /usr/local/cuda/lib64/libcudnn* && \
   curl -s https://bootstrap.pypa.io/get-pip.py | python3.10 && \
   pip3 install --upgrade \
     packaging \
@@ -103,7 +106,9 @@ RUN \
     /root/.cache
 
 # environment settings
-ENV PYTHONPATH="/app/moonraker/"
+ENV PYTHONPATH="/app/moonraker/" \
+    PATH="/usr/local/cuda/bin:${PATH}" \
+    LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 
 # copy local files
 COPY root/ /
